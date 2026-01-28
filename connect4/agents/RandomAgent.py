@@ -1,4 +1,4 @@
-from Classes.Move_Agents.MoveAgent import MoveAgent
+from connect4.agents.MoveAgent import MoveAgent
 
 
 class RandomAgent(MoveAgent):

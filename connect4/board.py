@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib
 
-from Classes.Marker import Marker
+from connect4.marker import Marker
 
 
 class Board:
     """Class representing a board"""
-    def __init__(self,number_of_rows,number_of_columns):
-        self.board= np.zeros(number_of_columns,number_of_rows)
+    def __init__(self):
+        self.number_of_columns = 7
+        self.number_of_rows = 6
+        self.board= np.zeros((self.number_of_rows,self.number_of_columns))
 
 
 
@@ -15,8 +17,8 @@ class Board:
     def __str__(self):
         symbols = {Marker.FIRST_PLAYER : 'O', Marker.SECOND_PLAYER : 'X',Marker.EMPTY :' '}
         data = {}
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
+        for i in range(self.number_of_rows):
+            for j in range(self.number_of_columns):
                 if self.board[i][j] == 1:
                     data['c{}_{}'.format(i + 1, j + 1)] = 'X'
                 if self.board[i][j] == 2:
