@@ -1,1 +1,67 @@
+import numpy
 import pytest
+
+from connect4.marker import Marker
+from connect4.player import Player
+
+
+class TestBoard:
+
+    class TestMove:
+        @pytest.mark.parametrize("column,player_number",[(i,i%2) for i in range(1,8)])
+        def test_move_empty_board(self,empty_board,player1,player2,column,player_number):
+            players = [player1,player2]
+            empty_board.move(column,players[player_number])
+            assert empty_board.board[5][column-1] == players[player_number].marker
+
+        @pytest.mark.parametrize("column",[0,-5,8,20])
+        def test_move_out_of_bounds(self,empty_board,player1,column):
+            with pytest.raises(ValueError):
+                empty_board.move(column,player1)
+
+        def test_multiple_moves_in_one_column(self,empty_board,player1,player2):
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+            assert empty_board.board[5][0] == 1
+            assert empty_board.board[4][0] == 2
+            assert empty_board.board[3][0] == 1
+            assert empty_board.board[2][0] == 2
+            assert empty_board.board[1][0] == 1
+            assert empty_board.board[0][0] == 2
+
+
+        def test_move_while_full_column(self,empty_board,player1,player2):
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+            empty_board.move(1,player1)
+            empty_board.move(1,player2)
+
+            with pytest.raises(ValueError):
+                empty_board.move(1,player1)
+
+
+
+
+    def test__str__(self,empty_board):
+        assert str(empty_board).strip() == """
+    ┌─┬─┬─┬─┬─┬─┬─┬─┐
+    │X│1│2│3│4│5│6│7│
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │1║ │ │ │ │ │ │ │
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │2║ │ │ │ │ │ │ │
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │3║ │ │ │ │ │ │ │
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │4║ │ │ │ │ │ │ │
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │5║ │ │ │ │ │ │ │
+    ├─┼─┼─┼─┼─┼─┼─┼─┤
+    │6║ │ │ │ │ │ │ │
+    └─┴─┴─┴─┴─┴─┴─┴─┘""".strip()

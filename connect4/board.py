@@ -2,14 +2,31 @@ import numpy as np
 import matplotlib
 
 from connect4.marker import Marker
+from connect4.player import Player
 
 
 class Board:
     """Class representing a board"""
     def __init__(self):
-        self.number_of_columns = 7
-        self.number_of_rows = 6
-        self.board= np.zeros((self.number_of_rows,self.number_of_columns))
+        self.__number_of_columns = 7
+        self.__number_of_rows = 6
+        self.board= np.zeros((self.__number_of_rows, self.__number_of_columns))
+
+
+    def move(self, column: int,player: Player):
+        if not 1<=column<=7:
+            raise ValueError("Niedozwolony ruch. Numer kolumny powinien być z zakresu 1-7")
+        true_column = column-1
+
+        if self.board[0][true_column] != Marker.EMPTY:
+            raise ValueError("Niedozwolony ruch. Kolumna jest pełna")
+
+        for row in range(self.__number_of_rows - 1, -1, -1):
+            if self.board[row][true_column] == Marker.EMPTY:
+                self.board[row][true_column] = player.marker
+                return
+        raise RuntimeError("Błąd metody wykonującej ruch")
+
 
 
 
@@ -17,14 +34,14 @@ class Board:
     def __str__(self):
         symbols = {Marker.FIRST_PLAYER : 'O', Marker.SECOND_PLAYER : 'X',Marker.EMPTY :' '}
         data = {}
-        for i in range(self.number_of_rows):
-            for j in range(self.number_of_columns):
+        for i in range(self.__number_of_rows):
+            for j in range(self.__number_of_columns):
                 if self.board[i][j] == 1:
-                    data['c{}_{}'.format(i + 1, j + 1)] = 'X'
+                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.FIRST_PLAYER]
                 if self.board[i][j] == 2:
-                    data['c{}_{}'.format(i + 1, j + 1)] = 'O'
+                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.SECOND_PLAYER]
                 if self.board[i][j] == 0:
-                    data['c{}_{}'.format(i + 1, j + 1)] = ''
+                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.EMPTY]
         szablon = """
     ┌─┬─┬─┬─┬─┬─┬─┬─┐
     │X│1│2│3│4│5│6│7│
