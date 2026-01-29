@@ -5,6 +5,9 @@ from connect4.marker import Marker
 from connect4.player import Player
 
 
+
+
+
 class Board:
     """Class representing a board"""
     def __init__(self):
@@ -13,7 +16,23 @@ class Board:
         self.board= np.zeros((self.__number_of_rows, self.__number_of_columns))
 
 
-    def move(self, column: int,player: Player):
+    def move(self, column: int,player: Player) -> None:
+        """
+        Executes a move in the game by placing the player's marker in the specified column.
+        The marker is placed in the lowest empty row of the given column if the column is not full.
+
+        :param column: The column where the player wishes to place their marker. Must be an integer
+            within the range 1 to 7 inclusive.
+        :type column: int
+        :param player: The Player object representing the current player making the move. The player
+            must have a valid marker associated with them.
+        :type player: Player
+        :return: None
+        :rtype: None
+        :raises ValueError: If the column number is outside the valid range 1-7.
+        :raises ValueError: If the column selected is already full and no further moves can be made in it.
+        :raises RuntimeError: If the method encounters an unexpected error while executing the move.
+        """
         if not 1<=column<=7:
             raise ValueError("Niedozwolony ruch. Numer kolumny powinien być z zakresu 1-7")
         true_column = column-1
@@ -27,7 +46,62 @@ class Board:
                 return
         raise RuntimeError("Błąd metody wykonującej ruch")
 
+    def is_full(self) -> bool:
+        """
+        Determines if a board is filled, signaling no empty spaces.
 
+        This method checks whether the first row of the board (commonly representing
+        the top-most row in a grid) contains any empty slots, represented by the value `0`.
+        If there are no empty slots, the board is considered "full."
+
+        :return: Whether the board is full (filled).
+        :rtype: bool
+        """
+        return not 0 in self.board[0]
+
+    def who_won(self) -> Marker:
+        """
+        Determines which marker, if any, has won the game by checking for horizontal, vertical,
+        or diagonal alignments of markers on the board. If no player has won, it returns Marker.EMPTY.
+
+        :return: The marker that has won the game, or Marker.EMPTY if no win condition is met.
+        :rtype: Marker
+        """
+        for row in range(self.__number_of_rows):
+            for column in range(self.__number_of_columns):
+                marker = self.board[row][column]
+                if marker == Marker.EMPTY:
+                    continue
+
+                if self._won_horizontally(row, column) or self._won_vertically(row, column) \
+                        or self._won_diagonally_upwards(row, column) or self._won_diagonally_downwards(row, column):
+                    return marker
+        return Marker.EMPTY
+
+    def _won_horizontally(self,row,column) -> bool:
+        if column>3:
+            return False
+        b = self.board
+        return b[row][column] == b[row][column+1] == b[row][column+2] == b[row][column+3]
+
+
+    def _won_vertically(self,row,column) -> bool:
+        if row>2:
+            return False
+        b = self.board
+        return b[row][column] == b[row+1][column] == b[row+2][column] == b[row+3][column]
+
+    def _won_diagonally_upwards(self,row,column) -> bool:
+        if row<3 or column>3:
+            return False
+        b = self.board
+        return b[row][column] == b[row-1][column+1] == b[row-2][column+2] == b[row-3][column+3]
+
+    def _won_diagonally_downwards(self,row,column) -> bool:
+        if row > 2 or column > 3:
+            return False
+        b = self.board
+        return b[row][column] == b[row+1][column+1] == b[row+2][column+2] == b[row+3][column+3]
 
 
 
@@ -60,3 +134,5 @@ class Board:
     └─┴─┴─┴─┴─┴─┴─┴─┘
     """
         return szablon.format(**data)
+
+

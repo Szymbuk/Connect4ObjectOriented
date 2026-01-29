@@ -1,3 +1,7 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from connect4.board import Board
 from connect4.marker import Marker
 
 
@@ -7,3 +11,9 @@ class Player:
         self.player = player_id
         self.marker = marker
         self.moving_logic = moving_logic
+
+
+    def move(self,column:int,board: 'Board'):
+        board.move(column,self)
+
+

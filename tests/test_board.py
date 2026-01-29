@@ -26,6 +26,7 @@ class TestBoard:
             empty_board.move(1,player2)
             empty_board.move(1,player1)
             empty_board.move(1,player2)
+
             assert empty_board.board[5][0] == 1
             assert empty_board.board[4][0] == 2
             assert empty_board.board[3][0] == 1
@@ -44,6 +45,38 @@ class TestBoard:
 
             with pytest.raises(ValueError):
                 empty_board.move(1,player1)
+
+    class TestWhoWon:
+
+        class TestDiagonalWin:
+            def test_trivial_win_board(self,empty_board,player1):
+                empty_board.move(1,player1)
+                empty_board.move(2,player1)
+                empty_board.move(2, player1)
+                empty_board.move(3, player1)
+                empty_board.move(3, player1)
+                empty_board.move(3, player1)
+                empty_board.move(4, player1)
+                empty_board.move(4, player1)
+                empty_board.move(4, player1)
+                empty_board.move(4, player1)
+
+
+                assert empty_board._won_diagonally_upwards(5, 0) == True
+
+            def test_false_on_almost_empty(self,empty_board,player1):
+                empty_board.move(1,player1)
+
+                assert empty_board._won_diagonally_upwards(5, 0) == False
+
+
+        class TestHorizontalWin:
+            pass
+        class TestVerticalWin:
+            pass
+
+
+
 
 
 
