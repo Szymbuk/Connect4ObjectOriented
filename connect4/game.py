@@ -19,8 +19,7 @@ class Game:
     def run(self):
         current_player = self._player1
         while not self.is_end()[0]:
-            column = int(input(f"Tura gracza {current_player.player}. Podaj kolumnę:"))
-            place = current_player.move(column, self._board)
+            place = current_player.move(self._board)
             message = f"Tura gracza {current_player.player} ({str(current_player.marker)}). Wykonano ruch na pole {place[0]+1},{place[1]+1}"
             self.notify_observers(message)
             if current_player == self._player1:

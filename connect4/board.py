@@ -119,4 +119,10 @@ class Board:
     """
         return szablon.format(**data)
 
+    def get_number_of_rows(self):
+        return self.__number_of_rows
+
+    def get_numer_of_columns(self):
+        return self.__number_of_columns
+
 
