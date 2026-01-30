@@ -12,7 +12,7 @@ class TestBoard:
         def test_move_empty_board(self,empty_board,player1,player2,column,player_number):
             players = [player1,player2]
             empty_board.move(column,players[player_number])
-            assert empty_board.board[5][column-1] == players[player_number].marker
+            assert empty_board._board[5][column - 1] == players[player_number].marker
 
         @pytest.mark.parametrize("column",[0,-5,8,20])
         def test_move_out_of_bounds(self,empty_board,player1,column):
@@ -27,12 +27,12 @@ class TestBoard:
             empty_board.move(1,player1)
             empty_board.move(1,player2)
 
-            assert empty_board.board[5][0] == 1
-            assert empty_board.board[4][0] == 2
-            assert empty_board.board[3][0] == 1
-            assert empty_board.board[2][0] == 2
-            assert empty_board.board[1][0] == 1
-            assert empty_board.board[0][0] == 2
+            assert empty_board._board[5][0] == 1
+            assert empty_board._board[4][0] == 2
+            assert empty_board._board[3][0] == 1
+            assert empty_board._board[2][0] == 2
+            assert empty_board._board[1][0] == 1
+            assert empty_board._board[0][0] == 2
 
 
         def test_move_while_full_column(self,empty_board,player1,player2):

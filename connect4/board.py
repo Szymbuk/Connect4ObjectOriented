@@ -16,23 +16,8 @@ class Board:
         self.board= np.zeros((self.__number_of_rows, self.__number_of_columns))
 
 
-    def move(self, column: int,player: Player) -> None:
-        """
-        Executes a move in the game by placing the player's marker in the specified column.
-        The marker is placed in the lowest empty row of the given column if the column is not full.
+    def move(self, column: int,player: Player) -> tuple[int,int]:
 
-        :param column: The column where the player wishes to place their marker. Must be an integer
-            within the range 1 to 7 inclusive.
-        :type column: int
-        :param player: The Player object representing the current player making the move. The player
-            must have a valid marker associated with them.
-        :type player: Player
-        :return: None
-        :rtype: None
-        :raises ValueError: If the column number is outside the valid range 1-7.
-        :raises ValueError: If the column selected is already full and no further moves can be made in it.
-        :raises RuntimeError: If the method encounters an unexpected error while executing the move.
-        """
         if not 1<=column<=7:
             raise ValueError("Niedozwolony ruch. Numer kolumny powinien być z zakresu 1-7")
         true_column = column-1
@@ -43,7 +28,7 @@ class Board:
         for row in range(self.__number_of_rows - 1, -1, -1):
             if self.board[row][true_column] == Marker.EMPTY:
                 self.board[row][true_column] = player.marker
-                return
+                return row,true_column
         raise RuntimeError("Błąd metody wykonującej ruch")
 
     def is_full(self) -> bool:
@@ -106,16 +91,15 @@ class Board:
 
 
     def __str__(self):
-        symbols = {Marker.FIRST_PLAYER : 'O', Marker.SECOND_PLAYER : 'X',Marker.EMPTY :' '}
         data = {}
         for i in range(self.__number_of_rows):
             for j in range(self.__number_of_columns):
                 if self.board[i][j] == 1:
-                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.FIRST_PLAYER]
+                    data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.FIRST_PLAYER)
                 if self.board[i][j] == 2:
-                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.SECOND_PLAYER]
+                    data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.SECOND_PLAYER)
                 if self.board[i][j] == 0:
-                    data['c{}_{}'.format(i + 1, j + 1)] = symbols[Marker.EMPTY]
+                    data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.EMPTY)
         szablon = """
     ┌─┬─┬─┬─┬─┬─┬─┬─┐
     │X│1│2│3│4│5│6│7│

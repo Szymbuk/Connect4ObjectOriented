@@ -13,7 +13,7 @@ class Player:
         self.moving_logic = moving_logic
 
 
-    def move(self,column:int,board: 'Board'):
-        board.move(column,self)
+    def move(self,column:int,board: 'Board') -> tuple[int,int]:
+        return board.move(column,self)
 
 
