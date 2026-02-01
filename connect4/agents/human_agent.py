@@ -4,6 +4,9 @@ from connect4.agents.MoveAgent import MoveAgent
 class HumanAgent(MoveAgent):
 
 
-    def choose_move(self) -> int(1 - 7):
-        move = int(input())
-        return move
+    def choose_move(self) -> int(0 - 6):
+        try:
+            move = int(input("Podaj numer kolumny z zakresu 1-7: "))
+        except:
+            raise ValueError("Podana wartość nie jest liczbą.")
+        return move -1

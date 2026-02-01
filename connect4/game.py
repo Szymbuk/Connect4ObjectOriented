@@ -19,7 +19,12 @@ class Game:
     def run(self):
         current_player = self._player1
         while not self.is_end()[0]:
-            place = current_player.move(self._board)
+            while True:
+                try:
+                    place = current_player.move(self._board)
+                    break
+                except ValueError as position_error:
+                    self.print_error(position_error)
             message = f"Tura gracza {current_player.player} ({str(current_player.marker)}). Wykonano ruch na pole {place[0]+1},{place[1]+1}"
             self.notify_observers(message)
             if current_player == self._player1:
@@ -30,6 +35,10 @@ class Game:
     def notify_observers(self,message: str):
         for observer in self._observers:
             observer.map_changed(self._board,message)
+
+    def print_error(self,error):
+        for observer in self._observers:
+            observer.print_error(error)
 
     def add_observer(self,observer: Observer):
         self._observers.append(observer)

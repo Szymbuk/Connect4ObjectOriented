@@ -18,17 +18,15 @@ class Board:
 
     def move(self, column: int,player: Player) -> tuple[int,int]:
 
-        if not 1<=column<=7:
+        if not 0<=column<=6:
             raise ValueError("Niedozwolony ruch. Numer kolumny powinien być z zakresu 1-7")
-        true_column = column-1
-
-        if self.board[0][true_column] != Marker.EMPTY:
+        if self.board[0][column] != Marker.EMPTY:
             raise ValueError("Niedozwolony ruch. Kolumna jest pełna")
 
         for row in range(self.__number_of_rows - 1, -1, -1):
-            if self.board[row][true_column] == Marker.EMPTY:
-                self.board[row][true_column] = player.marker
-                return row,true_column
+            if self.board[row][column] == Marker.EMPTY:
+                self.board[row][column] = player.marker
+                return column,row
         raise RuntimeError("Błąd metody wykonującej ruch")
 
     def is_full(self) -> bool:

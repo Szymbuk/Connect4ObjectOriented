@@ -13,6 +13,9 @@ class Observer(ABC):
     def map_changed(self,board: 'Board',message: str) -> None:
         pass
 
+    @abstractmethod
+    def print_error(self,message: str) -> None:
+        pass
 
 
 
