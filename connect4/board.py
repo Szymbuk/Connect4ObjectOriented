@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib
-
 from connect4.marker import Marker
 from connect4.player import Player
 
@@ -9,50 +8,62 @@ from connect4.player import Player
 
 
 class Board:
-    """Class representing a board"""
+    """Class representing a __board"""
     def __init__(self):
         self.__number_of_columns = 7
         self.__number_of_rows = 6
-        self.board= np.zeros((self.__number_of_rows, self.__number_of_columns))
+        self.__board= np.zeros((self.__number_of_rows, self.__number_of_columns))
 
 
-    def move(self, column: int,player: Player) -> tuple[int,int]:
+    def move(self, column: int,player_marker: Marker) -> tuple[int,int]:
 
         if not 0<=column<=6:
             raise ValueError("Niedozwolony ruch. Numer kolumny powinien być z zakresu 1-7")
-        if self.board[0][column] != Marker.EMPTY:
+        if self.__board[0][column] != Marker.EMPTY:
             raise ValueError("Niedozwolony ruch. Kolumna jest pełna")
 
         for row in range(self.__number_of_rows - 1, -1, -1):
-            if self.board[row][column] == Marker.EMPTY:
-                self.board[row][column] = player.marker
+            if self.__board[row][column] == Marker.EMPTY:
+                self.__board[row][column] = player_marker
                 return column,row
         raise RuntimeError("Błąd metody wykonującej ruch")
+
+
+    def reverse_move(self, column: int,marker: Marker) -> None:
+        for row in range(self.__number_of_rows):
+            if self.__board[row][column] != Marker.EMPTY:
+                if self.__board[row][column] != marker:
+                    raise ValueError("Próba odwrócenia ruchu innego gracza")
+                else:
+                    self.__board[row][column] = Marker.EMPTY
+                    return
+        raise ValueError("Brak znacznika gracza do cofnięcia")
+
 
     def is_full(self) -> bool:
         """
         Determines if a board is filled, signaling no empty spaces.
-
         This method checks whether the first row of the board (commonly representing
         the top-most row in a grid) contains any empty slots, represented by the value `0`.
         If there are no empty slots, the board is considered "full."
-
         :return: Whether the board is full (filled).
         :rtype: bool
         """
-        return not 0 in self.board[0]
+        return not 0 in self.__board[0]
+
+    def is_column_full(self, column: int) -> bool:
+        return self.__board[0][column] != Marker.EMPTY
 
     def who_won(self) -> Marker:
         """
         Determines which marker, if any, has won the game by checking for horizontal, vertical,
-        or diagonal alignments of markers on the board. If no player has won, it returns Marker.EMPTY.
-
+        or diagonal alignments of markers on the __board. If no player_id has won, it returns Marker.EMPTY.
         :return: The marker that has won the game, or Marker.EMPTY if no win condition is met.
         :rtype: Marker
         """
         for row in range(self.__number_of_rows):
             for column in range(self.__number_of_columns):
-                marker = self.board[row][column]
+                marker = self.__board[row][column]
                 if marker == Marker.EMPTY:
                     continue
 
@@ -64,39 +75,42 @@ class Board:
     def _won_horizontally(self,row,column) -> bool:
         if column>3:
             return False
-        b = self.board
+        b = self.__board
         return b[row][column] == b[row][column+1] == b[row][column+2] == b[row][column+3]
 
 
     def _won_vertically(self,row,column) -> bool:
         if row>2:
             return False
-        b = self.board
+        b = self.__board
         return b[row][column] == b[row+1][column] == b[row+2][column] == b[row+3][column]
 
     def _won_diagonally_upwards(self,row,column) -> bool:
         if row<3 or column>3:
             return False
-        b = self.board
+        b = self.__board
         return b[row][column] == b[row-1][column+1] == b[row-2][column+2] == b[row-3][column+3]
 
     def _won_diagonally_downwards(self,row,column) -> bool:
         if row > 2 or column > 3:
             return False
-        b = self.board
+        b = self.__board
         return b[row][column] == b[row+1][column+1] == b[row+2][column+2] == b[row+3][column+3]
 
+
+    def ends_game(self,row,column):
+        return self.who_won() != Marker.EMPTY
 
 
     def __str__(self):
         data = {}
         for i in range(self.__number_of_rows):
             for j in range(self.__number_of_columns):
-                if self.board[i][j] == 1:
+                if self.__board[i][j] == 1:
                     data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.FIRST_PLAYER)
-                if self.board[i][j] == 2:
+                if self.__board[i][j] == 2:
                     data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.SECOND_PLAYER)
-                if self.board[i][j] == 0:
+                if self.__board[i][j] == 0:
                     data['c{}_{}'.format(i + 1, j + 1)] = str(Marker.EMPTY)
         szablon = """
     ┌─┬─┬─┬─┬─┬─┬─┬─┐
@@ -117,10 +131,16 @@ class Board:
     """
         return szablon.format(**data)
 
-    def get_number_of_rows(self):
+    @property
+    def number_of_rows(self):
         return self.__number_of_rows
 
-    def get_numer_of_columns(self):
+    @property
+    def numer_of_columns(self):
         return self.__number_of_columns
+
+    @property
+    def board(self):
+        return self.__board
 
 
