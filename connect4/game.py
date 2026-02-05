@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import List
 
 from connect4.board import Board
 from connect4.marker import Marker
@@ -11,7 +11,7 @@ class Game:
     def __init__(self, player1:Player, player2:Player,board:Board):
         self._player1 = player1
         self._player2 = player2
-        self._observers = []
+        self._observers: List[Observer] = []
         self._board = board
 
 
@@ -21,11 +21,12 @@ class Game:
         while not self.is_end()[0]:
             while True:
                 try:
-                    place = current_player.move(self._board)
+                    column = current_player.choose_move()
+                    place = self._board.move(column,current_player.marker)
                     break
                 except ValueError as position_error:
                     self.print_error(position_error)
-            message = f"Tura gracza {current_player.player} ({str(current_player.marker)}). Wykonano ruch na pole {place[0]+1},{place[1]+1}"
+            message = f"Tura gracza {current_player.player_id} ({str(current_player.marker)}). Wykonano ruch na pole {place[0] + 1},{place[1] + 1}"
             self.notify_observers(message)
             if current_player == self._player1:
                 current_player = self._player2
@@ -48,8 +49,8 @@ class Game:
         """
         Determines if the game has reached its end condition.
 
-        The method checks if the board has a winner or if it is full, indicating
-        the end of the game. If there is no winner, it evaluates the board's
+        The method checks if the __board has a winner or if it is full, indicating
+        the end of the game. If there is no winner, it evaluates the __board's
         current state to determine if all positions are occupied.
 
         :returns: A tuple containing a boolean indicating whether the game has
