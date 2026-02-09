@@ -1,2 +1,23 @@
 .venv
 .idea
+
+# --- Django Core ---
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# --- Zmienne środowiskowe i bezpieczeństwo---
+.env
+.env.local
+
+# --- Pliki statyczne i media (pliki generowane/wgrywane) ---
+/media/
+/static/
+
+# --- Systemowe (Mac/Windows) ---
+.DS_Store
+Thumbs.db
