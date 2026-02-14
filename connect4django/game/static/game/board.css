@@ -1,0 +1,28 @@
+ .connect4_board {
+        display: grid;
+        grid-template-columns: repeat(7, 60px); /* 7 kolumn po 60px */
+        grid-template-rows: repeat(6, 60px);    /* 6 wierszy po 60px */
+        gap: 5px;
+        background-color: #0055AA; /* Niebieskie tło planszy */
+        padding: 10px;
+        border-radius: 10px;
+        width: fit-content;
+        margin: 20px auto;
+    }
+
+    .cell {
+        width: 60px;
+        height: 60px;
+        background-color: white; /* Puste pole */
+        border-radius: 50%; /* Robi kółko */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+    }
+
+
+    .player-1 { background-color: #ff0038
+    }
+    .player-2 { background-color: #ff9900
+    }

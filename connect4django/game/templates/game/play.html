@@ -1,4 +1,17 @@
 {% extends "game/base.html" %}
+
 {% block content %}
     <h1>PLAY</h1>
+    <div class ='connect4_board'>
+    {% for row in board %}
+        {% for cell in row %}
+            <div class = "cell
+            {% if cell == 1 %}player-1
+                {% elif cell == 2 %}player-2
+                {% endif %}"
+            >
+            </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
 {% endblock content %}
