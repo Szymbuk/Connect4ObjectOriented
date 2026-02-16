@@ -13,7 +13,7 @@ from connect4.player import Player
 def main():
     plansza = Board()
     print(plansza)
-    p1,p2 = Player(1,HumanAgent(plansza),Marker.FIRST_PLAYER), Player(2,MinmaxTrivialAgent(plansza,4,False),Marker.SECOND_PLAYER)
+    p1,p2 = Player(1,HumanAgent(plansza),Marker.FIRST_PLAYER), Player(2,MinmaxTrivialAgent(plansza,6,False),Marker.SECOND_PLAYER)
     game = Game(p1,p2,plansza)
     game.add_observer(ConsoleDisplay())
     game.run()
